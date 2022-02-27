@@ -6,8 +6,21 @@ body {
     grid-template-rows: repeat(6, auto);
     grid-template-columns: repeat(8, 1fr);
 }
+h1 {
+    grid-row: 1 /2;
+    grid-column: 1 / 9;
+    justify-self: center;
+}
+#dealer-info {
+    grid-row: 2 / 3;
+    grid-column: 1 / 9;
+}
 #dealer-cards {
     grid-row: 3 / 4;
+    grid-column: 1 / 9;
+}
+#player-info {
+    grid-row: 4 / 5;
     grid-column: 1 / 9;
 }
 #player-cards {
