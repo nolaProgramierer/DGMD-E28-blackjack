@@ -7,13 +7,23 @@ document.addEventListener("DOMContentLoaded", function() {
         console.log("Stand!");
     });
 
+    document.querySelector('#deal').addEventListener('click', function() {
+        console.log("Let's play!");
+    });
+
    
 
     const suit = ['Clubs', 'Diamonds', 'Hearts', 'Spades'];
     const faceVal = ['1', '2', '3', '4', '5', '6', '7', '8', '9', 'Jack', 'Queen', 'King', 'Ace'];
+    const playerHand = [];
+    const dealerHand = [];
 
+    // Play Blackjack
     var deck1 = makeDeck();
-    shuffleDeck(deck1);
+    var shuffledDeck = shuffleDeck(deck1);
+    dealCards(shuffledDeck);
+
+
     // Make a deck of cards
     function makeDeck() {
         const deck = [];
@@ -37,8 +47,25 @@ document.addEventListener("DOMContentLoaded", function() {
             temp = arr[i];
             arr[i] = arr[randomIndex];
             arr[randomIndex] = temp;
+            console.log(randomIndex);
         }
         console.log(arr);
+        return arr;
+    }
+
+    function dealCards(obArr) {
+        let turn = 0;
+        let deltCards = 4;
+        for (let i = 0; i < deltCards; i++) {
+            if (turn % 2 == 0) {
+                playerHand.push(obArr.pop());
+            }
+            else dealerHand.push(obArr.pop());
+        turn++;
+        }
+        console.log(playerHand);
+        console.log(dealerHand);
+
     }
 
     console.log("DOM content parsed and loaded");
