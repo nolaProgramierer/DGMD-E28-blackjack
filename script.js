@@ -75,18 +75,14 @@ document.addEventListener("DOMContentLoaded", function() {
             }
             else {
                 dealerHand.push(obArr.pop());
-                
             }
         turn++;
         }
         playingDeck = obArr;
-        console.log(`Player hand:  ${playerHand}`);
-        console.log(`Dealer hand: ${dealerHand}`);
-        console.log(`Playing deck: ${playingDeck}`);
         showDealer(dealerHand);
         showPlayer(playerHand);
-        handValue(dealerHand);
-        handValue(playerHand)
+        intHandValue(dealerHand);
+        intHandValue(playerHand);
         return playingDeck;
     }
 
@@ -108,19 +104,16 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     }
 
-    function handValue(arr) {
+    function intHandValue(arr) {
         var count = 0;
         var faceCards = ['Jack', 'Queen', 'King', 'Ace'];
         for (let card in arr) {
             if (faceCards.includes(arr[card].faceVal)) {
                 count += 10;
-                console.log("Face card " + arr[card].faceVal);
             }
             else if (!(faceCards.includes(arr[card].faceVal))) {
                 count += parseInt(arr[card].faceVal);
-                console.log("Number card" + count);
             }
-           
         }
         console.log(count);
         return count;

@@ -18,6 +18,9 @@ h1 {
 #dealer-cards {
     grid-row: 3 / 4;
     grid-column: 1 / 9;
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 10px;
 }
 #player-info {
     grid-row: 4 / 5;
@@ -26,6 +29,9 @@ h1 {
 #player-cards {
     grid-row: 5 / 6;
     grid-column: 1 / 9;
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 10px;
 }
 #player-controls {
     grid-row: 6 / 7;
