@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
     document.querySelector('#hit').addEventListener('click', function() {
-       
+        hit(playingDeck, 10);
         console.log("Hit!");
     });
 
@@ -25,6 +25,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const playerHand = [];
     const dealerHand = [];
     var playingDeck = [];
+    var playerCardCount = 0;
 
     // Play Blackjack
     //var deck1 = makeDeck();
@@ -127,6 +128,31 @@ document.addEventListener("DOMContentLoaded", function() {
             val = 10;
         }
         return val;
+    }
+
+    
+    
+    function hit(deck) {
+        let sum = 0;
+        var nextCard = deck.pop();
+        showPlayerCard(nextCard);
+        playerHand.push(nextCard);
+        for (let item in playerHand) {
+            sum += parseInt(playerHand[item].val);
+        }
+        console.log("Player hand count" + sum);
+        return sum;
+    }
+
+    function showPlayerCard(card) {
+        let cardDiv = document.createElement('div');
+            cardDiv.innerHTML = card.suit;
+            cardDiv.innerHTML += card.faceVal;
+            document.querySelector('#player-cards').appendChild(cardDiv);
+    }
+
+    function calcHand(startVal, nextVal) {
+
     }
 
 
