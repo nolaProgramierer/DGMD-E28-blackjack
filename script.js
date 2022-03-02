@@ -32,14 +32,15 @@ document.addEventListener("DOMContentLoaded", function() {
     //dealCards(shuffledDeck);
 
 
-    /* For every suit, twelve objects containing suit and face value*/
+    /* For every suit, twelve objects containing suit and face value and card rank*/
     function makeDeck() {
         const deck = [];
         for (let i = 0; i < suit.length; i++) {
             for (let j = 0; j < faceVal.length; j++) {
                 deck.push({
                     suit: suit[i],
-                    faceVal: faceVal[j]
+                    faceVal: faceVal[j],
+                    val: assignValue(faceVal[j])
                 });
             }
         }
@@ -121,6 +122,19 @@ document.addEventListener("DOMContentLoaded", function() {
 
     function showSuitIcon(arr) {
 
+    }
+
+    // Assign rank to cards based on face card
+    function assignValue(arrItem) {
+        var val;
+        if (Number.isInteger(parseInt(arrItem))) {
+            val = parseInt(arrItem);
+        } else if ( arrItem == "Ace") {
+            val = [1, 11];
+        } else {
+            val = 10;
+        }
+        return val;
     }
 
 
