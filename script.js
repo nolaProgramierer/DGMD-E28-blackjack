@@ -15,6 +15,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
     document.querySelector('#stand').addEventListener('click', function() {
+        stand(playingDeck);
         console.log("Stand!");
     });
 
@@ -131,7 +132,6 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     
-    
     function hit(deck) {
         let sum = 0;
         var nextCard = deck.pop();
@@ -141,20 +141,37 @@ document.addEventListener("DOMContentLoaded", function() {
             sum += parseInt(playerHand[item].val);
         }
         console.log("Player hand count" + sum);
+        if (sum > 21) {
+            console.log("Dealer wins");
+        }
         return sum;
     }
 
     function showPlayerCard(card) {
         let cardDiv = document.createElement('div');
-            cardDiv.innerHTML = card.suit;
-            cardDiv.innerHTML += card.faceVal;
-            document.querySelector('#player-cards').appendChild(cardDiv);
+        cardDiv.innerHTML = card.suit;
+        cardDiv.innerHTML += card.faceVal;
+        document.querySelector('#player-cards').appendChild(cardDiv);
     }
 
-    function calcHand(startVal, nextVal) {
-
+    function showDealerCard(card) {
+        let cardDiv = document.createElement('div');
+        cardDiv.innerHTML = card.suit;
+        cardDiv.innerHTML += card.faceVal;
+        document.querySelector('#dealer-cards').appendChild(cardDiv);
     }
 
+    function stand(deck) {
+        let sum = 0;
+        var nextCard = deck.pop();
+        dealerHand.push(nextCard);
+        showDealerCard(nextCard);
+        for (let item in dealerHand) {
+            sum += parseInt(dealerHand[item].val);
+        }
+        console.log("Dealer hand count" + sum);
+        
+    }
 
     console.log("DOM content parsed and loaded");
 });// End DOM content loaded
