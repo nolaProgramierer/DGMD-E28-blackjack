@@ -119,6 +119,10 @@ document.addEventListener("DOMContentLoaded", function() {
         return count;
     }
 
+    function showSuitIcon(arr) {
+
+    }
+
 
     console.log("DOM content parsed and loaded");
 });// End DOM content loaded
