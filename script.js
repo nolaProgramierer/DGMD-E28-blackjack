@@ -61,9 +61,7 @@ document.addEventListener("DOMContentLoaded", function() {
             temp = arr[i];
             arr[i] = arr[randomIndex];
             arr[randomIndex] = temp;
-            console.log(randomIndex);
         }
-        console.log(arr);
         return arr;
     }
 
@@ -82,8 +80,8 @@ document.addEventListener("DOMContentLoaded", function() {
         playingDeck = obArr;
         showDealer(dealerHand);
         showPlayer(playerHand);
-        intHandValue(dealerHand);
-        intHandValue(playerHand);
+        initialHandValue(dealerHand);
+        initialHandValue(playerHand);
         return playingDeck;
     }
 
@@ -105,18 +103,12 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     }
 
-    function intHandValue(arr) {
+    function initialHandValue(arr) {
         var count = 0;
-        var faceCards = ['Jack', 'Queen', 'King', 'Ace'];
-        for (let card in arr) {
-            if (faceCards.includes(arr[card].faceVal)) {
-                count += 10;
-            }
-            else if (!(faceCards.includes(arr[card].faceVal))) {
-                count += parseInt(arr[card].faceVal);
-            }
+        for (let obj in arr) {
+            count += arr[obj].val;
         }
-        console.log(count);
+        console.log("Initial hand value" + count);
         return count;
     }
 
@@ -130,7 +122,7 @@ document.addEventListener("DOMContentLoaded", function() {
         if (Number.isInteger(parseInt(arrItem))) {
             val = parseInt(arrItem);
         } else if ( arrItem == "Ace") {
-            val = [1, 11];
+            val = 10;
         } else {
             val = 10;
         }
