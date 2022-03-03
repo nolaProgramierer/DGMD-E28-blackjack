@@ -82,10 +82,13 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     function showDealer(arr) {
-        for (let card in arr) {
+        for (let i = 0; i < arr.length; i++) {
             let cardDiv = document.createElement('div');
-            showCardSuit(arr[card].suit, cardDiv);
-            cardDiv.innerHTML += arr[card]["faceVal"];
+            /*if (i == 1) {
+                cardDiv.classList.add('hidden-card');
+            }*/
+            showCardSuit(arr[i].suit, cardDiv);
+            cardDiv.innerHTML += arr[i].faceVal;
             document.querySelector('#dealer-cards').appendChild(cardDiv);
         }
     }
@@ -94,7 +97,7 @@ document.addEventListener("DOMContentLoaded", function() {
         for (let card in arr) {
             let cardDiv = document.createElement('div');
             showCardSuit(arr[card].suit, cardDiv);
-            cardDiv.innerHTML += arr[card]["faceVal"];
+            cardDiv.innerHTML += arr[card].faceVal;
             document.querySelector('#player-cards').appendChild(cardDiv);
         }
     }
@@ -138,19 +141,23 @@ document.addEventListener("DOMContentLoaded", function() {
 
     function showPlayerCard(card) {
         let cardDiv = document.createElement('div');
-        cardDiv.innerHTML = card.suit;
+        showCardSuit(card.suit, cardDiv);
         cardDiv.innerHTML += card.faceVal;
         document.querySelector('#player-cards').appendChild(cardDiv);
     }
 
     function showDealerCard(card) {
         let cardDiv = document.createElement('div');
-        cardDiv.innerHTML = card.suit;
+        showCardSuit(card.suit, cardDiv);
         cardDiv.innerHTML += card.faceVal;
         document.querySelector('#dealer-cards').appendChild(cardDiv);
     }
 
     function stand(deck) {
+        // Uncover second card
+        document.querySelectorAll('.hidden-card').forEach(function(card){
+            card.classList.remove('.hidden-card');
+        });
         let sum = 0;
         var nextCard = deck.pop();
         dealerHand.push(nextCard);

@@ -22,6 +22,9 @@ h1 {
     grid-template-columns: repeat(6, 1fr);
     gap: 10px;
 }
+#card2 {
+    background-color: gray;
+}
 #player-info {
     grid-row: 4 / 5;
     grid-column: 1 / 9;
@@ -39,4 +42,9 @@ h1 {
 }
 .card-display {
     font-weight: bold;
+}
+.hidden-card {
+    border: solid 3px red;
+    background-color: black;
+    z-index: 10;
 }
