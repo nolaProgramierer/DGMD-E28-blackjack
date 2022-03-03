@@ -48,3 +48,16 @@ h1 {
     background-color: black;
     z-index: 10;
 }
+#player-wins {
+    display: none;
+}
+#dealer-wins {
+    display: none;
+}
+.game-over {
+    background-color: gray;
+    opacity: .7;
+}
+#play-game {
+    visibility: hidden;
+}

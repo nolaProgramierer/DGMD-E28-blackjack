@@ -10,16 +10,18 @@
        <div id="main-container">
            <h1>Play Blackjack</h1>
            <div id="dealer-info">Dealer:</div>
-           <div id="dealer-cards">
-           </div>
+           <div class="cards" id="dealer-cards"></div>
            <div id="player-info">Player:</div>
-           <div id="player-cards"></div>
+           <div class="cards" id="player-cards"></div>
            <div id="player-controls">
-               <input id="deal" type="button" value="Begin Play">
-               <input id ="hit" type="button" value="Hit">
-               <input id="stand" type="button" value="Stand">
+               <input id="play-game" type="button" value="Play Game">
+               <input class="game-btns" id="deal" type="button" value="Deal Cards">
+               <input class="game-btns" id ="hit" type="button" value="Hit">
+               <input class="game-btns" id="stand" type="button" value="Stand">
            </div>
-           <div></div>
+           <div id="dealer-wins"><h1>Dealer Wins!</h1></div>
+           <div id="player-wins"><h1>Player wins</h1></div>
+
 
        </div>
 

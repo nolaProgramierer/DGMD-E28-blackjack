@@ -21,6 +21,10 @@ document.addEventListener("DOMContentLoaded", function() {
         console.log("Stand!");
     });
 
+    document.querySelector('#play-game').addEventListener('click', function(){
+        location.reload();
+    })
+
     const suit = ['Clubs', 'Diamonds', 'Hearts', 'Spades'];
     const faceVal = ['1', '2', '3', '4', '5', '6', '7', '8', '9', 'Jack', 'Queen', 'King', 'Ace'];
     const playerHand = [];
@@ -134,8 +138,16 @@ document.addEventListener("DOMContentLoaded", function() {
         }
         console.log("Player hand count" + sum);
         if (sum > 21) {
-            console.log("Dealer wins");
+            document.querySelector('#dealer-wins').style.display = "block";
+            document.querySelectorAll('.cards').forEach(function(card) {
+                card.classList.add('game-over');
+            });
+            document.querySelectorAll('.game-btns').forEach(function(btn) {
+                btn.style.display = 'none';
+            });
+            document.querySelector('#play-game').style.visibility = "visible";
         }
+        console.log("Dealer wins");
         return sum;
     }
 
@@ -186,6 +198,8 @@ document.addEventListener("DOMContentLoaded", function() {
                 console.log("This is an unknown suit");
         }
     }
+
+
 
    
     console.log("DOM content parsed and loaded");
