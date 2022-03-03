@@ -1,6 +1,9 @@
 document.addEventListener("DOMContentLoaded", function() {
     
     document.querySelector('#deal').addEventListener('click', function() {
+        // Hide button once play begins
+        document.querySelector('#deal').style.display = "none";
+
         var deck1 = makeDeck();
         var shuffledDeck = shuffleDeck(deck1);
         var dealtCards = dealCards(shuffledDeck);
@@ -13,13 +16,10 @@ document.addEventListener("DOMContentLoaded", function() {
         console.log("Hit!");
     });
 
-
     document.querySelector('#stand').addEventListener('click', function() {
         stand(playingDeck);
         console.log("Stand!");
     });
-
-   
 
     const suit = ['Clubs', 'Diamonds', 'Hearts', 'Spades'];
     const faceVal = ['1', '2', '3', '4', '5', '6', '7', '8', '9', 'Jack', 'Queen', 'King', 'Ace'];
@@ -27,12 +27,6 @@ document.addEventListener("DOMContentLoaded", function() {
     const dealerHand = [];
     var playingDeck = [];
     var playerCardCount = 0;
-
-    // Play Blackjack
-    //var deck1 = makeDeck();
-    //var shuffledDeck = shuffleDeck(deck1);
-    //dealCards(shuffledDeck);
-
 
     /* For every suit, twelve objects containing suit and face value and card rank*/
     function makeDeck() {
@@ -90,7 +84,7 @@ document.addEventListener("DOMContentLoaded", function() {
     function showDealer(arr) {
         for (let card in arr) {
             let cardDiv = document.createElement('div');
-            cardDiv.innerHTML = arr[card]["suit"];
+            showCardSuit(arr[card].suit, cardDiv);
             cardDiv.innerHTML += arr[card]["faceVal"];
             document.querySelector('#dealer-cards').appendChild(cardDiv);
         }
@@ -99,7 +93,7 @@ document.addEventListener("DOMContentLoaded", function() {
     function showPlayer(arr) {
         for (let card in arr) {
             let cardDiv = document.createElement('div');
-            cardDiv.innerHTML = arr[card]["suit"];
+            showCardSuit(arr[card].suit, cardDiv);
             cardDiv.innerHTML += arr[card]["faceVal"];
             document.querySelector('#player-cards').appendChild(cardDiv);
         }
@@ -112,10 +106,6 @@ document.addEventListener("DOMContentLoaded", function() {
         }
         console.log("Initial hand value" + count);
         return count;
-    }
-
-    function showSuitIcon(arr) {
-
     }
 
     // Assign rank to cards based on face card
@@ -131,7 +121,6 @@ document.addEventListener("DOMContentLoaded", function() {
         return val;
     }
 
-    
     function hit(deck) {
         let sum = 0;
         var nextCard = deck.pop();
@@ -170,8 +159,27 @@ document.addEventListener("DOMContentLoaded", function() {
             sum += parseInt(dealerHand[item].val);
         }
         console.log("Dealer hand count" + sum);
-        
     }
 
+    function showCardSuit(card, div) {
+        switch(card) {
+            case "Clubs":
+                div.innerHTML = "<span>&clubs;</span>";
+                break;
+            case "Diamonds":
+                div.innerHTML = "<span style='color:red'>&diams;</span>";
+                break;
+            case "Hearts":
+                div.innerHTML = "<span style='color:red'>&hearts;</span>";
+                break;
+            case "Spades":
+                div.innerHTML = "<span style=>&spades;</span>";
+                break;
+            default:
+                console.log("This is an unknown suit");
+        }
+    }
+
+   
     console.log("DOM content parsed and loaded");
 });// End DOM content loaded
