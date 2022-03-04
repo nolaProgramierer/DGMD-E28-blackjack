@@ -88,12 +88,12 @@ document.addEventListener("DOMContentLoaded", function() {
     function showDealer(arr) {
         for (let i = 0; i < arr.length; i++) {
             let cardDiv = document.createElement('div');
-            /*if (i == 1) {
-                cardDiv.classList.add('hidden-card');
-            }*/
             showCardSuit(arr[i].suit, cardDiv);
             cardDiv.innerHTML += arr[i].faceVal;
             document.querySelector('#dealer-cards').appendChild(cardDiv);
+        }
+        if (isNatural(arr)) {
+            console.log('Player wins');
         }
     }
 
@@ -104,6 +104,10 @@ document.addEventListener("DOMContentLoaded", function() {
             cardDiv.innerHTML += arr[card].faceVal;
             document.querySelector('#player-cards').appendChild(cardDiv);
         }
+        if (isNatural(arr)) {
+            console.log('Player wins');
+        }
+        
     }
 
     function initialHandValue(arr) {
@@ -121,7 +125,7 @@ document.addEventListener("DOMContentLoaded", function() {
         if (Number.isInteger(parseInt(arrItem))) {
             val = parseInt(arrItem);
         } else if ( arrItem == "Ace") {
-            val = 10;
+            val = 11;
         } else {
             val = 10;
         }
@@ -136,6 +140,7 @@ document.addEventListener("DOMContentLoaded", function() {
         for (let item in playerHand) {
             sum += parseInt(playerHand[item].val);
         }
+        
         console.log("Player hand count" + sum);
         if (sum > 21) {
             document.querySelector('#dealer-wins').style.display = "block";
@@ -146,8 +151,8 @@ document.addEventListener("DOMContentLoaded", function() {
                 btn.style.display = 'none';
             });
             document.querySelector('#play-game').style.visibility = "visible";
+            console.log("Dealer wins");
         }
-        console.log("Dealer wins");
         return sum;
     }
 
@@ -216,11 +221,32 @@ document.addEventListener("DOMContentLoaded", function() {
                 console.log("This is an unknown suit");
         }
     }
-
-    
-
-
-
-   
     console.log("DOM content parsed and loaded");
+
+    // Check initial deal hand for natural 21
+    function isNatural(hand) {
+        var initialVal = 0;
+        for(let card in hand) {
+            initialVal += hand[card].val;
+        }
+        if (initialVal == 21) {
+            console.log("It's a natural");
+        }
+    }
+
+    // Change value of 'Ace' if hand rank goes over 21
+    function changeAceVal(handCount, hand) {
+        var aceValue = 0;
+        var hasAce = hand.find(function(item, index) {
+            if(item.faceVal == "Ace") {
+                return true;
+            }
+        });
+        if (hasAce && handCount > 10) {
+            aceValue = 1;
+        }
+        console.log(aceValue);
+        return aceValue;
+
+    }
 });// End DOM content loaded
