@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
     document.querySelector('#hit').addEventListener('click', function() {
-        hit(playingDeck, 10);
+        hit(playingDeck);
         console.log("Hit!");
     });
 
@@ -23,7 +23,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     document.querySelector('#play-game').addEventListener('click', function(){
         location.reload();
-    })
+    });
 
     const suit = ['Clubs', 'Diamonds', 'Hearts', 'Spades'];
     const faceVal = ['1', '2', '3', '4', '5', '6', '7', '8', '9', 'Jack', 'Queen', 'King', 'Ace'];
@@ -171,13 +171,31 @@ document.addEventListener("DOMContentLoaded", function() {
             card.classList.remove('.hidden-card');
         });
         let sum = 0;
-        var nextCard = deck.pop();
-        dealerHand.push(nextCard);
-        showDealerCard(nextCard);
-        for (let item in dealerHand) {
-            sum += parseInt(dealerHand[item].val);
+        if (parseInt(initialHandValue(dealerHand)) < 17) {
+            console.log("Initial hand value under 17");
+
+            while(sum < 21 && sum < 17) {
+                sum = 0;
+                var nextCard = deck.pop();
+                dealerHand.push(nextCard);
+                showDealerCard(nextCard);
+                for (let item in dealerHand) {
+                    sum += parseInt(dealerHand[item].val);
+                }
+                console.log("Dealer hand sum:" + sum);
+            }
+            if (sum > 21) {
+                document.querySelector('#player-wins').style.display = "block";
+                document.querySelectorAll('.cards').forEach(function(card) {
+                    card.classList.add('game-over');
+                });
+                document.querySelectorAll('.game-btns').forEach(function(btn) {
+                    btn.style.display = 'none';
+                });
+                document.querySelector('#play-game').style.visibility = "visible";
+                console.log("Dealer busted" + sum);
+            }
         }
-        console.log("Dealer hand count" + sum);
     }
 
     function showCardSuit(card, div) {
@@ -198,6 +216,8 @@ document.addEventListener("DOMContentLoaded", function() {
                 console.log("This is an unknown suit");
         }
     }
+
+    
 
 
 
