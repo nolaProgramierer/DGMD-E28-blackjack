@@ -135,12 +135,18 @@ document.addEventListener("DOMContentLoaded", function() {
     function hit(deck) {
         let sum = 0;
         var nextCard = deck.pop();
+        // Display card in browser
         showPlayerCard(nextCard);
         playerHand.push(nextCard);
+        // Add card to existing hand and total values
         for (let item in playerHand) {
             sum += parseInt(playerHand[item].val);
         }
-        
+        // Change value of Ace card if total hand will exceed 21
+        var result = playerHand.find(isAce);
+        if (result && sum > 10) {
+            sum -= 10;
+        }
         console.log("Player hand count" + sum);
         if (sum > 21) {
             document.querySelector('#dealer-wins').style.display = "block";
@@ -187,7 +193,14 @@ document.addEventListener("DOMContentLoaded", function() {
                 for (let item in dealerHand) {
                     sum += parseInt(dealerHand[item].val);
                 }
-                console.log("Dealer hand sum:" + sum);
+            console.log("Dealer hand sum:" + sum);
+            
+            // Change value of Ace card if total hand will exceed 21
+            var result = dealerHand.find(isAce);
+            if (result && sum > 10) {
+                sum -= 10;
+            }
+            
             }
             if (sum > 21) {
                 document.querySelector('#player-wins').style.display = "block";
@@ -235,18 +248,14 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     // Change value of 'Ace' if hand rank goes over 21
-    function changeAceVal(handCount, hand) {
-        var aceValue = 0;
-        var hasAce = hand.find(function(item, index) {
-            if(item.faceVal == "Ace") {
-                return true;
-            }
-        });
-        if (hasAce && handCount > 10) {
-            aceValue = 1;
+    function changeAceVal(hand) {
+        if (hand.includes(hand[faceVal] == "Ace")) {
+            console.log("Here's an 'Ace'");
+            return true;
         }
-        console.log(aceValue);
-        return aceValue;
+    }
 
+    function isAce(card) {
+        return card.faceVal === "Ace";
     }
 });// End DOM content loaded
