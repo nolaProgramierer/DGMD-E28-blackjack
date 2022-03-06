@@ -85,7 +85,7 @@ h1 {
     display: none;
 }
 .game-over {
-    background-color: gray;
+    background-color: lightgray;
     opacity: .7;
 }
 #play-game {

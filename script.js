@@ -165,14 +165,23 @@ document.addEventListener("DOMContentLoaded", function() {
         }
         console.log("Player hand count" + sum);
         if (sum > 21) {
+            // Show winner
             document.querySelector('#dealer-wins').style.display = "block";
+            // Gray out cards
             document.querySelectorAll('.cards').forEach(function(card) {
                 card.classList.add('game-over');
             });
+            // Remove game control buttons
             document.querySelectorAll('.game-btns').forEach(function(btn) {
                 btn.style.display = 'none';
             });
+            // Show button for new game
             document.querySelector('#play-game').style.visibility = "visible";
+            // Show dealer hidden card & remove border
+            document.querySelectorAll('#dealer-card1 *').forEach(function(card) {
+                card.style.opacity = '1';
+            });
+            document.querySelector('#dealer-card1').style.borderStyle = 'none';
             console.log("Dealer wins");
         }
         return sum;
@@ -200,7 +209,7 @@ document.addEventListener("DOMContentLoaded", function() {
         document.querySelectorAll('#dealer-card1 *').forEach(function(card) {
             card.style.opacity = "1";
         });
-        document.querySelector('#dealer-card1').style.borderColor = "white";
+        document.querySelector('#dealer-card1').style.borderStyle = "none";
         document.querySelector('#hit').style.visibility = 'hidden';
         let sum = 0;
         if (parseInt(initialHandValue(dealerHand)) < 17) {
@@ -271,4 +280,8 @@ document.addEventListener("DOMContentLoaded", function() {
     function isAce(card) {
         return card.faceVal === "Ace";
     }
+
+    function determineWinner() {
+
+    };
 });// End DOM content loaded
