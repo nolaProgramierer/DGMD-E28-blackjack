@@ -1,27 +1,37 @@
 document.addEventListener("DOMContentLoaded", function() {
+
+    // Hide play buttons
+    document.querySelector('#hit').style.visibility = 'hidden';
+    document.querySelector('#stand').style.visibility = 'hidden';
     
     document.querySelector('#deal').addEventListener('click', function() {
-        // Hide button once play begins
+        // Hide 'deal' button once play begins
         document.querySelector('#deal').style.display = "none";
 
         var deck1 = makeDeck();
         var shuffledDeck = shuffleDeck(deck1);
         var dealtCards = dealCards(shuffledDeck);
+        //Show play buttons
+        document.querySelector('#hit').style.visibility = 'visible';
+        document.querySelector('#stand').style.visibility = 'visible';
 
         console.log("Let's play!");
     });
 
     document.querySelector('#hit').addEventListener('click', function() {
+        // Player begins and continues to play each card
         hit(playingDeck);
         console.log("Hit!");
     });
 
     document.querySelector('#stand').addEventListener('click', function() {
+        // Dealer shows cards
         stand(playingDeck);
         console.log("Stand!");
     });
 
     document.querySelector('#play-game').addEventListener('click', function(){
+        // Reload game
         location.reload();
     });
 
@@ -32,7 +42,7 @@ document.addEventListener("DOMContentLoaded", function() {
     var playingDeck = [];
     var playerCardCount = 0;
 
-    /* For every suit, twelve objects containing suit and face value and card rank*/
+    /* For every suit, twelve objects containing suit, card face value and card rank*/
     function makeDeck() {
         const deck = [];
         for (let i = 0; i < suit.length; i++) {
@@ -67,7 +77,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     function dealCards(obArr) {
         let turn = 0;
-        let deltCards = 4;
+        let deltCards = 4; // For 2 players
         for (let i = 0; i < deltCards; i++) {
             if (turn % 2 == 0) {
                 playerHand.push(obArr.pop());
@@ -80,6 +90,7 @@ document.addEventListener("DOMContentLoaded", function() {
         playingDeck = obArr;
         showDealer(dealerHand);
         showPlayer(playerHand);
+        // Calcuate value of dealt cards
         initialHandValue(dealerHand);
         initialHandValue(playerHand);
         return playingDeck;
@@ -88,10 +99,13 @@ document.addEventListener("DOMContentLoaded", function() {
     function showDealer(arr) {
         for (let i = 0; i < arr.length; i++) {
             let cardDiv = document.createElement('div');
+            // Set id for generated divs in order to target styling of dealer 2nd card
+            cardDiv.setAttribute(`id`, `dealer-card${i}`);
             showCardSuit(arr[i].suit, cardDiv);
             cardDiv.innerHTML += arr[i].faceVal;
             document.querySelector('#dealer-cards').appendChild(cardDiv);
         }
+        // Check for 21 on initial deal
         if (isNatural(arr)) {
             console.log('Player wins');
         }
@@ -104,22 +118,23 @@ document.addEventListener("DOMContentLoaded", function() {
             cardDiv.innerHTML += arr[card].faceVal;
             document.querySelector('#player-cards').appendChild(cardDiv);
         }
+        // Check for 21 on initial deal
         if (isNatural(arr)) {
             console.log('Player wins');
         }
-        
     }
 
+    // Callculate initial value of hands dealt
     function initialHandValue(arr) {
-        var count = 0;
-        for (let obj in arr) {
-            count += arr[obj].val;
-        }
+        let initialValue = 0;
+        let count = arr.reduce(function(previousVal, currentVal) {
+            return previousVal + currentVal.val;
+        }, initialValue);
         console.log("Initial hand value" + count);
         return count;
     }
 
-    // Assign rank to cards based on face card
+    // Assign numerical value of cards in hand
     function assignValue(arrItem) {
         var val;
         if (Number.isInteger(parseInt(arrItem))) {
@@ -132,6 +147,7 @@ document.addEventListener("DOMContentLoaded", function() {
         return val;
     }
 
+    // Player plays
     function hit(deck) {
         let sum = 0;
         var nextCard = deck.pop();
@@ -139,9 +155,9 @@ document.addEventListener("DOMContentLoaded", function() {
         showPlayerCard(nextCard);
         playerHand.push(nextCard);
         // Add card to existing hand and total values
-        for (let item in playerHand) {
-            sum += parseInt(playerHand[item].val);
-        }
+        sum = playerHand.reduce(function(previousVal, currentVal) {
+            return parseInt(previousVal) + parseInt(currentVal.val);
+        }, 0);
         // Change value of Ace card if total hand will exceed 21
         var result = playerHand.find(isAce);
         if (result && sum > 10) {
@@ -162,6 +178,7 @@ document.addEventListener("DOMContentLoaded", function() {
         return sum;
     }
 
+    // Display card on each successive call
     function showPlayerCard(card) {
         let cardDiv = document.createElement('div');
         showCardSuit(card.suit, cardDiv);
@@ -169,6 +186,7 @@ document.addEventListener("DOMContentLoaded", function() {
         document.querySelector('#player-cards').appendChild(cardDiv);
     }
 
+    // Display card on each successive call
     function showDealerCard(card) {
         let cardDiv = document.createElement('div');
         showCardSuit(card.suit, cardDiv);
@@ -176,11 +194,11 @@ document.addEventListener("DOMContentLoaded", function() {
         document.querySelector('#dealer-cards').appendChild(cardDiv);
     }
 
+    // Dealer plays
     function stand(deck) {
         // Uncover second card
-        document.querySelectorAll('.hidden-card').forEach(function(card){
-            card.classList.remove('.hidden-card');
-        });
+        document.querySelector('#dealer-card1').style.opacity = "1";
+        document.querySelector('#hit').style.visibility = 'hidden';
         let sum = 0;
         if (parseInt(initialHandValue(dealerHand)) < 17) {
             console.log("Initial hand value under 17");
@@ -190,17 +208,16 @@ document.addEventListener("DOMContentLoaded", function() {
                 var nextCard = deck.pop();
                 dealerHand.push(nextCard);
                 showDealerCard(nextCard);
-                for (let item in dealerHand) {
-                    sum += parseInt(dealerHand[item].val);
-                }
+                sum = dealerHand.reduce(function(previousVal, currentVal) {
+                    return parseInt(previousVal) + parseInt(currentVal.val);
+                }, 0);
             console.log("Dealer hand sum:" + sum);
             
             // Change value of Ace card if total hand will exceed 21
             var result = dealerHand.find(isAce);
-            if (result && sum > 10) {
+            if (result && sum > 11) {
                 sum -= 10;
             }
-            
             }
             if (sum > 21) {
                 document.querySelector('#player-wins').style.display = "block";
@@ -216,6 +233,7 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     }
 
+    // Display icon for card suit
     function showCardSuit(card, div) {
         switch(card) {
             case "Clubs":
@@ -238,23 +256,15 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // Check initial deal hand for natural 21
     function isNatural(hand) {
-        var initialVal = 0;
-        for(let card in hand) {
-            initialVal += hand[card].val;
-        }
-        if (initialVal == 21) {
+        let  sum = hand.reduce(function(previousVal, currentVal) {
+            return previousVal + currentVal.val;
+        }, 0);
+        if (sum == 21) {
             console.log("It's a natural");
         }
     }
 
-    // Change value of 'Ace' if hand rank goes over 21
-    function changeAceVal(hand) {
-        if (hand.includes(hand[faceVal] == "Ace")) {
-            console.log("Here's an 'Ace'");
-            return true;
-        }
-    }
-
+    // Check for 'Ace' card
     function isAce(card) {
         return card.faceVal === "Ace";
     }
