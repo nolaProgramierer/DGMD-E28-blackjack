@@ -158,9 +158,9 @@ document.addEventListener("DOMContentLoaded", function() {
         sum = playerHand.reduce(function(previousVal, currentVal) {
             return parseInt(previousVal) + parseInt(currentVal.val);
         }, 0);
-        // Change value of Ace card if total hand will exceed 21
+        // After initial deal, subsequent Aces have value of 1
         var result = playerHand.find(isAce);
-        if (result && sum > 10) {
+        if (result && sum > 21) {
             sum -= 10;
         }
         console.log("Player hand count" + sum);
@@ -225,9 +225,9 @@ document.addEventListener("DOMContentLoaded", function() {
                 }, 0);
             console.log("Dealer hand sum:" + sum);
             
-            // Change value of Ace card if total hand will exceed 21
+            // Aces after initial deal must be 1
             var result = dealerHand.find(isAce);
-            if (result && sum > 11) {
+            if (result && sum > 21) {
                 sum -= 10;
             }
             }
