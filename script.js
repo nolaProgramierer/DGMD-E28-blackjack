@@ -102,7 +102,7 @@ document.addEventListener("DOMContentLoaded", function() {
             // Set id for generated divs in order to target styling of dealer 2nd card
             cardDiv.setAttribute(`id`, `dealer-card${i}`);
             showCardSuit(arr[i].suit, cardDiv);
-            cardDiv.innerHTML += arr[i].faceVal;
+            cardDiv.innerHTML += `<span>${arr[i].faceVal}</span>`;
             document.querySelector('#dealer-cards').appendChild(cardDiv);
         }
         // Check for 21 on initial deal
@@ -197,7 +197,10 @@ document.addEventListener("DOMContentLoaded", function() {
     // Dealer plays
     function stand(deck) {
         // Uncover second card
-        document.querySelector('#dealer-card1').style.opacity = "1";
+        document.querySelectorAll('#dealer-card1 *').forEach(function(card) {
+            card.style.opacity = "1";
+        });
+        document.querySelector('#dealer-card1').style.borderColor = "white";
         document.querySelector('#hit').style.visibility = 'hidden';
         let sum = 0;
         if (parseInt(initialHandValue(dealerHand)) < 17) {
