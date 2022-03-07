@@ -167,16 +167,7 @@ document.addEventListener("DOMContentLoaded", function() {
         if (sum > 21) {
             // Show winner
             document.querySelector('#dealer-wins').style.display = "block";
-            // Gray out cards
-            document.querySelectorAll('.cards').forEach(function(card) {
-                card.classList.add('game-over');
-            });
-            // Remove game control buttons
-            document.querySelectorAll('.game-btns').forEach(function(btn) {
-                btn.style.display = 'none';
-            });
-            // Show button for new game
-            document.querySelector('#play-game').style.visibility = "visible";
+            endGame();
             // Show dealer hidden card & remove border
             document.querySelectorAll('#dealer-card1 *').forEach(function(card) {
                 card.style.opacity = '1';
@@ -203,19 +194,31 @@ document.addEventListener("DOMContentLoaded", function() {
         document.querySelector('#dealer-cards').appendChild(cardDiv);
     }
 
+
+
+
     // Dealer plays
     function stand(deck) {
+
+
+        var playerHandSum = playerHand.reduce(function(previousVal, currentVal) {
+            return parseInt(previousVal) + parseInt(currentVal.val);
+        }, 0);
+
+
         // Uncover second card
         document.querySelectorAll('#dealer-card1 *').forEach(function(card) {
             card.style.opacity = "1";
         });
         document.querySelector('#dealer-card1').style.borderStyle = "none";
         document.querySelector('#hit').style.visibility = 'hidden';
+        isDealerWinOnFirstDeal(initialHandValue(dealerHand), initialHandValue(playerHand));
         let sum = 0;
+        // If dealer's initial hand is under 17, dealer must deal
         if (parseInt(initialHandValue(dealerHand)) < 17) {
             console.log("Initial hand value under 17");
-
-            while(sum < 21 && sum < 17) {
+            // Dealer deals cards until 17 is reached or hand is over 21
+            while(sum < 17) {
                 sum = 0;
                 var nextCard = deck.pop();
                 dealerHand.push(nextCard);
@@ -223,27 +226,39 @@ document.addEventListener("DOMContentLoaded", function() {
                 sum = dealerHand.reduce(function(previousVal, currentVal) {
                     return parseInt(previousVal) + parseInt(currentVal.val);
                 }, 0);
-            console.log("Dealer hand sum:" + sum);
-            
-            // Aces after initial deal must be 1
-            var result = dealerHand.find(isAce);
-            if (result && sum > 21) {
-                sum -= 10;
-            }
-            }
+                // Aces after initial deal must have vallue of 1
+                var result = dealerHand.find(isAce);
+                if (result) {
+                    sum -= 10;
+                }
+                console.log("Dealer hand sum:" + sum);
+            } // end while loop
+            // If hand is over 21, dealer busts.  Player wins.
             if (sum > 21) {
                 document.querySelector('#player-wins').style.display = "block";
-                document.querySelectorAll('.cards').forEach(function(card) {
-                    card.classList.add('game-over');
-                });
-                document.querySelectorAll('.game-btns').forEach(function(btn) {
-                    btn.style.display = 'none';
-                });
-                document.querySelector('#play-game').style.visibility = "visible";
+                endGame();
                 console.log("Dealer busted" + sum);
             }
+        else if (sum > playerHandSum) {
+            document.querySelector('#dealer-wins').style.display = "block";
+                    endGame();
+                    console.log("Dealer wins");
+        } else if (sum == playerHandSum) {
+            endGame();
+            console.log("Tie");
+        } else {
+            document.querySelector('#player-wins').style.display = "block";
+            endGame();
+            console.log("Player wins");
+        }
         }
     }
+
+
+
+
+
+
 
     // Display icon for card suit
     function showCardSuit(card, div) {
@@ -281,7 +296,28 @@ document.addEventListener("DOMContentLoaded", function() {
         return card.faceVal === "Ace";
     }
 
-    function determineWinner() {
+    // Determine winner on initial deal
+    function isDealerWinOnFirstDeal(dealerCount, playerCount) {
+        if (dealerCount > 16 && playerCount < dealerCount) {
+            document.querySelector('#dealer-wins').style.display = "block";
+            endGame();
+            console.log("Dealer wins with: " + dealerCount);
+        }
+    }
 
-    };
+    function endGame() {
+        // Gray out game table
+        document.querySelectorAll('.cards').forEach(function(card) {
+            card.classList.add('game-over');
+        });
+        // Remove game control buttons
+        document.querySelectorAll('.game-btns').forEach(function(btn) {
+        btn.style.display = 'none';
+    });
+        // Show button for new game
+        document.querySelector('#play-game').style.visibility = "visible";
+        
+    }
+
+    
 });// End DOM content loaded
