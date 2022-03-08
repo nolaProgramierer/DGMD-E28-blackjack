@@ -195,17 +195,12 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
 
-
-
     // Dealer plays
     function stand(deck) {
-
 
         var playerHandSum = playerHand.reduce(function(previousVal, currentVal) {
             return parseInt(previousVal) + parseInt(currentVal.val);
         }, 0);
-
-
         // Uncover second card
         document.querySelectorAll('#dealer-card1 *').forEach(function(card) {
             card.style.opacity = "1";
@@ -214,10 +209,9 @@ document.addEventListener("DOMContentLoaded", function() {
         document.querySelector('#hit').style.visibility = 'hidden';
         isDealerWinOnFirstDeal(initialHandValue(dealerHand), initialHandValue(playerHand));
         let sum = 0;
-        // If dealer's initial hand is under 17, dealer must deal
+        // If dealer's initial hand is under 17, dealer must deal until reaching at least 17
         if (parseInt(initialHandValue(dealerHand)) < 17) {
             console.log("Initial hand value under 17");
-            // Dealer deals cards until 17 is reached or hand is over 21
             while(sum < 17) {
                 sum = 0;
                 var nextCard = deck.pop();
@@ -239,11 +233,24 @@ document.addEventListener("DOMContentLoaded", function() {
                 endGame();
                 console.log("Dealer busted" + sum);
             }
+            // If dealer first two cards are greater than players cards after stand
+            // dealer wins
+        else if ((sum > 16 && sum < 22) && playerHandSum < sum) {
+            document.querySelector('#dealer-wins').style.display = "block";
+            endGame();
+            console.log("Dealer wins");
+        }
+        else if ((sum > 16 && sum < 22) && playerHandSum > sum) {
+            document.querySelector('#player-wins').style.display = "block";
+            endGame();
+            console.log("Player wins");
+        }
         else if (sum > playerHandSum) {
             document.querySelector('#dealer-wins').style.display = "block";
-                    endGame();
-                    console.log("Dealer wins");
+            endGame();
+            console.log("Dealer wins");
         } else if (sum == playerHandSum) {
+            document.querySelector('#tie').style.display = "block";
             endGame();
             console.log("Tie");
         } else {
@@ -253,12 +260,6 @@ document.addEventListener("DOMContentLoaded", function() {
         }
         }
     }
-
-
-
-
-
-
 
     // Display icon for card suit
     function showCardSuit(card, div) {
