@@ -7,6 +7,7 @@ document.addEventListener("DOMContentLoaded", function() {
     document.querySelector('#deal').addEventListener('click', function() {
         // Hide 'deal' button once play begins
         document.querySelector('#deal').style.display = "none";
+        freezeWager();
 
         var deck1 = makeDeck();
         var shuffledDeck = shuffleDeck(deck1);
@@ -317,6 +318,14 @@ document.addEventListener("DOMContentLoaded", function() {
     });
         // Show button for new game
         document.querySelector('#play-game').style.visibility = "visible";
+    }
+
+    function freezeWager() {
+        document.querySelector('#wager').setAttribute('disabled', '');
+        console.log("Wager is frozen");
+    }
+
+    function calcPlayerBankOnWager() {
         
     }
 

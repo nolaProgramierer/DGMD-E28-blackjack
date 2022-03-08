@@ -8,7 +8,16 @@
    </head>
    <body>
        <div id="main-container">
-           <h1>Play Blackjack</h1>
+           
+            <div id="player-bank">Player bank:<span id="amount">$100</span></div>
+            <div id="title"><h1>Play Blackjack</h1></div>
+            <div id="bet">
+                <label for="wager">Place your wager</label>
+                <input id="wager" type="number" name="wager" placeholder=" $5" step="5" min="0" max="100" required>
+            </div>
+            
+            
+           
            <div id="dealer-info">Dealer Hand</div>
            <div class="cards" id="dealer-cards"></div>
            <div id="player-info">Player Hand</div>
