@@ -217,6 +217,7 @@ document.addEventListener("DOMContentLoaded", function() {
         document.querySelector('#hit').style.visibility = 'hidden';
         //isDealerWinOnFirstDeal(initialHandValue(dealerHand), initialHandValue(playerHand));
         let sum = 0;
+        
         // If dealer's initial hand is under 17, dealer must deal until reaching at least 17
         if (parseInt(initialHandValue(dealerHand)) < 17) {
             while(sum < 17) {
@@ -288,20 +289,6 @@ document.addEventListener("DOMContentLoaded", function() {
                 document.querySelector('#player-wins').style.display = "block";
                 endGame();
                 console.log("Player wins" + sum);
-            }
-            else if (sum < 22 && sum > playerHandSum) {
-                document.querySelector('#dealer-wins').style.display = "block";
-                endGame();
-                console.log("Dealer wins");
-                console.log("Dealer" + dealerInitialSum);
-                console.log("Player:" + playerHandSum);
-            }
-            else if (dealerInitialSum == playerHandSum) {
-                document.querySelector('#tie').style.display = "block";
-                endGame();
-                console.log("Tie");
-                console.log("Dealer" + dealerInitialSum);
-                console.log("Player:" + playerHandSum);
             }
         } // end if < 17
         // Dealer stands with cards dealt
