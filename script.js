@@ -1,16 +1,13 @@
 document.addEventListener("DOMContentLoaded", function() {
-  
     // Hide play buttons
     document.querySelector('#hit').style.visibility = 'hidden';
     document.querySelector('#stand').style.visibility = 'hidden';
-
-    calcPlayerBankOnWager();
-    
 
     document.querySelector('#deal').addEventListener('click', function() {
         // Hide 'deal' button once play begins
         document.querySelector('#deal').style.display = "none";
         freezeWager();
+        
 
         var deck1 = makeDeck();
         var shuffledDeck = shuffleDeck(deck1);
@@ -184,6 +181,7 @@ document.addEventListener("DOMContentLoaded", function() {
             document.querySelector('#dealer-card1').style.borderStyle = 'none';
             console.log("Dealer wins");
         }
+        console.log("Sum in hit:" + sum);
         return sum;
     }
 
@@ -204,12 +202,13 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
 
+   
     // Dealer plays
     function stand(deck) {
-
         var playerHandSum = playerHand.reduce(function(previousVal, currentVal) {
             return parseInt(previousVal) + parseInt(currentVal.val);
         }, 0);
+        
         // Uncover second card
         document.querySelectorAll('#dealer-card1 *').forEach(function(card) {
             card.style.opacity = "1";
@@ -220,7 +219,6 @@ document.addEventListener("DOMContentLoaded", function() {
         let sum = 0;
         // If dealer's initial hand is under 17, dealer must deal until reaching at least 17
         if (parseInt(initialHandValue(dealerHand)) < 17) {
-            console.log("Initial hand value under 17");
             while(sum < 17) {
                 sum = 0;
                 var nextCard = deck.pop();
@@ -229,52 +227,118 @@ document.addEventListener("DOMContentLoaded", function() {
                 sum = dealerHand.reduce(function(previousVal, currentVal) {
                     return parseInt(previousVal) + parseInt(currentVal.val);
                 }, 0);
-                // Aces after initial deal must have value of 1
-                let result = dealerHand.find(isAce);
-                if (result) {
-                    sum -= 10;
-                }
+                
+                console.log("Dealer dealing until 17: " + sum);
+                console.log("Player hand sum:" + playerHandSum);
+    
+                // If hand is over 21, dealer busts.  Player wins.
+                
+                console.log("Dealer hand sum:" + sum);
+                console.log("Player hand sum:" + playerHandSum);
+
                 if (sum > 21) {
                     document.querySelector('#player-wins').style.display = "block";
                     endGame();
                     console.log("Dealer busted" + sum);
                 }
-                console.log("Dealer hand sum:" + sum);
+                
             } // end while loop
-            // If hand is over 21, dealer busts.  Player wins.
-            
-        }
-        let dealerInitialSum = dealerHand.reduce(function(previousVal, currentVal) {
-            return parseInt(previousVal) + parseInt(currentVal.val);
-        }, 0);
-        console.log("Sum before logic" + dealerInitialSum);
-        let aceCount = calcAceValue(playerHand, "Ace");
-        dealerInitialSum -= aceCount * 10;
+            var dealerInitialSum = dealerHand.reduce(function(previousVal, currentVal) {
+                return parseInt(previousVal) + parseInt(currentVal.val);
+            }, 0);
 
-        // If dealer first two cards are greater than players cards after stand
-            // dealer wins
-        if ((dealerInitialSum > 16 && dealerInitialSum < 22) && playerHandSum < dealerInitialSum) {
-            document.querySelector('#dealer-wins').style.display = "block";
-            endGame();
-            console.log("Dealer wins");
-            console.log("Dealer" + dealerInitialSum);
-            console.log("Player:" + playerHandSum);
-        }
-        if ((dealerInitialSum > 16 && dealerInitialSum < 22) && (playerHandSum > dealerInitialSum && playerHandSum < 22)) {
-            document.querySelector('#player-wins').style.display = "block";
-            endGame();
-            console.log("Player wins");
-            console.log("Dealer" + dealerInitialSum);
-            console.log("Player:" + playerHandSum);
-        }
-        if (dealerInitialSum == playerHandSum) {
-            document.querySelector('#tie').style.display = "block";
-            endGame();
-            console.log("Tie");
-            console.log("Dealer" + dealerInitialSum);
-            console.log("Player:" + playerHandSum);
-        }
-    }
+            console.log("Dealer hand sum:" + sum);
+            console.log("Player hand sum:" + playerHandSum);
+
+            if (isNatural(dealerHand) && !isNatural(playerHand)) {
+                document.querySelector('#dealer-wins').style.display = "block";
+                endGame();
+                console.log("Dealer wins");
+                console.log("Dealer" + dealerInitialSum);
+                console.log("Player:" + playerHandSum);
+            }
+
+            else if (isNatural(playerHand) && !isNatural(dealerHand)) {
+                document.querySelector('#player-wins').style.display = "block";
+                endGame();
+                console.log("Player wins");
+                console.log("Dealer" + dealerInitialSum);
+                console.log("Player:" + playerHandSum);
+            }
+            else if (sum < 22 && (sum < playerHandSum)) {
+                document.querySelector('#player-wins').style.display = "block";
+                endGame();
+                console.log("Player wins" + sum);
+            }
+            else if (sum < 22 && sum > playerHandSum) {
+                document.querySelector('#dealer-wins').style.display = "block";
+                endGame();
+                console.log("Dealer wins");
+                console.log("Dealer" + dealerInitialSum);
+                console.log("Player:" + playerHandSum);
+            }
+            else if (dealerInitialSum == playerHandSum) {
+                document.querySelector('#tie').style.display = "block";
+                endGame();
+                console.log("Tie");
+                console.log("Dealer" + dealerInitialSum);
+                console.log("Player:" + playerHandSum);
+            }
+            else if (sum < 22 && (sum < playerHandSum && playerHandSum < 21)) {
+                document.querySelector('#player-wins').style.display = "block";
+                endGame();
+                console.log("Player wins" + sum);
+            }
+            else if (sum < 22 && sum > playerHandSum) {
+                document.querySelector('#dealer-wins').style.display = "block";
+                endGame();
+                console.log("Dealer wins");
+                console.log("Dealer" + dealerInitialSum);
+                console.log("Player:" + playerHandSum);
+            }
+            else if (dealerInitialSum == playerHandSum) {
+                document.querySelector('#tie').style.display = "block";
+                endGame();
+                console.log("Tie");
+                console.log("Dealer" + dealerInitialSum);
+                console.log("Player:" + playerHandSum);
+            }
+        } // end if < 17
+        // Dealer stands with cards dealt
+        else {
+            let dealerInitialSum = dealerHand.reduce(function(previousVal, currentVal) {
+                return parseInt(previousVal) + parseInt(currentVal.val);
+            }, 0);
+
+            console.log("Sum in else clause" + sum);
+            console.log("Player sum before else logic" + playerHandSum);
+            console.log("Dealer sum before else logic" + dealerInitialSum);
+    
+            // If dealer first two cards are greater than players cards after stand
+                // dealer wins
+            if (dealerInitialSum > playerHandSum && dealerInitialSum) {
+                document.querySelector('#dealer-wins').style.display = "block";
+                endGame();
+                console.log("Dealer wins");
+                console.log("Dealer" + dealerInitialSum);
+                console.log("Player:" + playerHandSum);
+            }
+            else if (playerHandSum > dealerInitialSum && playerHandSum < 22) {
+                document.querySelector('#player-wins').style.display = "block";
+                endGame();
+                console.log("Player wins");
+                console.log("Dealer" + dealerInitialSum);
+                console.log("Player:" + playerHandSum);
+            }
+            else if (dealerInitialSum == playerHandSum) {
+                document.querySelector('#tie').style.display = "block";
+                endGame();
+                console.log("Tie");
+                console.log("Dealer" + dealerInitialSum);
+                console.log("Player:" + playerHandSum);
+            }
+        } // end else
+    }// end stand
 
     // Display icon for card suit
     function showCardSuit(card, div) {
@@ -339,21 +403,13 @@ document.addEventListener("DOMContentLoaded", function() {
         console.log("Wager is frozen");
     }
 
-    function calcPlayerBankOnWager() {
-        var amount = document.querySelector('#bank-acct').innerHTML;
-        document.querySelector('#wager').addEventListener('click', function(){
-            var bankAmt = amount;
-            var wager = document.querySelector('#wager').value;
-            var currAmount = bankAmt - wager;
-            console.log(currAmount);
-            document.querySelector('#bank-acct').innerHTML = currAmount;
-            console.log("The player is betting");
-            console.log("Wager: " + wager);
-            console.log("Stash: " + currAmount);
-            amtForward = currAmount;
-            console.log(amtForward);
-        });
-        return amtForward;
+
+
+    var bank = 100;
+    function betting() {
+        var amount = 25;
+        document.querySelector('#bank-acct').innerHTML = amount;
+        return amount;
     }
 
     function setBankAcctBalance(amt) {
