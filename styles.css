@@ -91,7 +91,8 @@ body {
 #tie {
     grid-column: 3 / 5;
     justify-self: center;
-    display: none; 
+    display: none;
+    font-size: 1.25em;
 }
 #dealer-wins {
     grid-column: 5 / 7;

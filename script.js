@@ -167,7 +167,7 @@ document.addEventListener("DOMContentLoaded", function() {
             return parseInt(previousVal) + parseInt(currentVal.val);
         }, 0);
         // After initial deal, subsequent Aces have value of 1
-        var aceCount = calcAceValue(playerHand, "Ace");
+        var aceCount = calcNumAces(playerHand, "Ace");
         sum -= aceCount * 10;
         console.log("Player hand count" + sum);
         if (sum > 21) {
@@ -228,21 +228,22 @@ document.addEventListener("DOMContentLoaded", function() {
                 sum = dealerHand.reduce(function(previousVal, currentVal) {
                     return parseInt(previousVal) + parseInt(currentVal.val);
                 }, 0);
-                
                 console.log("Dealer dealing until 17: " + sum);
                 console.log("Player hand sum:" + playerHandSum);
-    
-                // If hand is over 21, dealer busts.  Player wins.
-                
                 console.log("Dealer hand sum:" + sum);
                 console.log("Player hand sum:" + playerHandSum);
+                 // If hand is over 21, dealer busts.  Player wins.
+
+                 if (isAce(nextCard) && sum + 11 > 21) {
+                     sum -= 10;
+                     console.log("Inside is Ace");
+                 }
 
                 if (sum > 21) {
                     document.querySelector('#player-wins').style.display = "block";
                     endGame();
                     console.log("Dealer busted" + sum);
                 }
-                
             } // end while loop
             var dealerInitialSum = dealerHand.reduce(function(previousVal, currentVal) {
                 return parseInt(previousVal) + parseInt(currentVal.val);
@@ -258,7 +259,6 @@ document.addEventListener("DOMContentLoaded", function() {
                 console.log("Dealer" + dealerInitialSum);
                 console.log("Player:" + playerHandSum);
             }
-
             else if (isNatural(playerHand) && !isNatural(dealerHand)) {
                 document.querySelector('#player-wins').style.display = "block";
                 endGame();
@@ -297,20 +297,25 @@ document.addEventListener("DOMContentLoaded", function() {
                 return parseInt(previousVal) + parseInt(currentVal.val);
             }, 0);
 
-            console.log("Sum in else clause" + sum);
+            var aceCount = calcNumAces(dealerHand, "Ace");
+            if (aceCount != 0 && dealerInitialSum > 11) {
+                dealerInitialSum -= aceCount * 10;
+                console.log("Insiide else statement of stand for dealer Ace");
+                console.log("Dealer sum in Ace" + dealerInitialSum);
+            }
             console.log("Player sum before else logic" + playerHandSum);
             console.log("Dealer sum before else logic" + dealerInitialSum);
     
             // If dealer first two cards are greater than players cards after stand
                 // dealer wins
-            if (dealerInitialSum > playerHandSum && dealerInitialSum) {
+            if (dealerInitialSum > playerHandSum) {
                 document.querySelector('#dealer-wins').style.display = "block";
                 endGame();
                 console.log("Dealer wins");
                 console.log("Dealer" + dealerInitialSum);
                 console.log("Player:" + playerHandSum);
             }
-            else if (playerHandSum > dealerInitialSum && playerHandSum < 22) {
+            else if (playerHandSum < 22 && playerHandSum > dealerInitialSum) {
                 document.querySelector('#player-wins').style.display = "block";
                 endGame();
                 console.log("Player wins");
@@ -390,8 +395,6 @@ document.addEventListener("DOMContentLoaded", function() {
         console.log("Wager is frozen");
     }
 
-
-
     var bank = 100;
     function betting() {
         var amount = 25;
@@ -406,11 +409,21 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
     // Returns number of Aces in hand for total number of player cards
-    function calcAceValue(objArr, val) {
+    function calcNumAces(objArr, val) {
         var count = objArr.filter(obj => obj.faceVal === val).length;
         console.log("Ace count:" + count);
         return count;
     }
 
+    function calcDealerAce(card) {
+        let value = 0;
+        if (card.faceVal == "Ace") {
+            if (card.val + 11 > 21) {
+                value -= 10;
+            }
+            console.log("Inside calcDealerAce:" + value);
+            return value;
+        }
+    }
     
 });// End DOM content loaded
