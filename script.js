@@ -204,6 +204,7 @@ document.addEventListener("DOMContentLoaded", function() {
             // Show winner
             document.querySelector('#dealer-wins').style.display = "block";
             endGame();
+            dealerWins();
             // Show dealer hidden card & remove border
             document.querySelectorAll('#dealer-card1 *').forEach(function(card) {
                 card.style.opacity = '1';
