@@ -2,12 +2,22 @@ document.addEventListener("DOMContentLoaded", function() {
     // Hide play buttons
     document.querySelector('#hit').style.visibility = 'hidden';
     document.querySelector('#stand').style.visibility = 'hidden';
+    
+    var playerBet = 0;
+    var playerBank = 0;
+
+
+    var bankAmt = localStorage.getItem('bankAmt');
+    if (bankAmt) {
+        document.querySelector('#bank-acct').innerHTML = bankAmt;
+    }
+
 
     document.querySelector('#deal').addEventListener('click', function() {
         // Hide 'deal' button once play begins
         document.querySelector('#deal').style.display = "none";
+
         freezeWager();
-        
 
         var deck1 = makeDeck();
         var shuffledDeck = shuffleDeck(deck1);
@@ -33,9 +43,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     document.querySelector('#play-game').addEventListener('click', function(){
         // Reload game
-        location.reload();
-        document.querySelector('#bank-acct').innerHTML = calcPlayerBankOnWager();
-        console.log(calcPlayerBankOnWager());
+        window.location.reload();
     });
 
     const suit = ['Clubs', 'Diamonds', 'Hearts', 'Spades'];
@@ -265,11 +273,15 @@ document.addEventListener("DOMContentLoaded", function() {
                 console.log("Player wins");
                 console.log("Dealer" + dealerInitialSum);
                 console.log("Player:" + playerHandSum);
+
+                playerWins()
             }
             else if (sum < 22 && (sum < playerHandSum)) {
                 document.querySelector('#player-wins').style.display = "block";
                 endGame();
                 console.log("Player wins" + sum);
+
+                playerWins()
             }
             else if (sum < 22 && sum > playerHandSum) {
                 document.querySelector('#dealer-wins').style.display = "block";
@@ -277,6 +289,8 @@ document.addEventListener("DOMContentLoaded", function() {
                 console.log("Dealer wins");
                 console.log("Dealer" + dealerInitialSum);
                 console.log("Player:" + playerHandSum);
+
+                dealerWins()
             }
             else if (dealerInitialSum == playerHandSum) {
                 document.querySelector('#tie').style.display = "block";
@@ -289,6 +303,8 @@ document.addEventListener("DOMContentLoaded", function() {
                 document.querySelector('#player-wins').style.display = "block";
                 endGame();
                 console.log("Player wins" + sum);
+
+                playerWins()
             }
         } // end if < 17
         // Dealer stands with cards dealt
@@ -314,6 +330,8 @@ document.addEventListener("DOMContentLoaded", function() {
                 console.log("Dealer wins");
                 console.log("Dealer" + dealerInitialSum);
                 console.log("Player:" + playerHandSum);
+
+                dealerWins()
             }
             else if (playerHandSum < 22 && playerHandSum > dealerInitialSum) {
                 document.querySelector('#player-wins').style.display = "block";
@@ -321,6 +339,8 @@ document.addEventListener("DOMContentLoaded", function() {
                 console.log("Player wins");
                 console.log("Dealer" + dealerInitialSum);
                 console.log("Player:" + playerHandSum);
+
+                playerWins();
             }
             else if (dealerInitialSum == playerHandSum) {
                 document.querySelector('#tie').style.display = "block";
@@ -395,19 +415,6 @@ document.addEventListener("DOMContentLoaded", function() {
         console.log("Wager is frozen");
     }
 
-    var bank = 100;
-    function betting() {
-        var amount = 25;
-        document.querySelector('#bank-acct').innerHTML = amount;
-        return amount;
-    }
-
-    function setBankAcctBalance(amt) {
-        document.querySelector('#bank-acct').innerHTML = amt;
-        console.log(amt);
-    }
-
-
     // Returns number of Aces in hand for total number of player cards
     function calcNumAces(objArr, val) {
         var count = objArr.filter(obj => obj.faceVal === val).length;
@@ -425,5 +432,26 @@ document.addEventListener("DOMContentLoaded", function() {
             return value;
         }
     }
+
+
+    function playerWins() {
+        let bet = parseInt(document.querySelector('#wager').value);
+        let bankAmount = document.querySelector('#bank-acct').innerHTML;
+        let newAmount = parseInt(bankAmount) - bet;
+        console.log(bet + parseInt(bankAmount));
+        document.querySelector('#bank-acct').innerHTML = newAmount;
+        localStorage.setItem('bankAmt', newAmount);
+        
+    }
+
+    function dealerWins() {
+        let bet = parseInt(document.querySelector('#wager').value);
+        let bankAmount = document.querySelector('#bank-acct').innerHTML;
+        let newAmount = parseInt(bankAmount) - bet;
+        document.querySelector('#bank-acct').innerHTML = newAmount;
+        localStorage.setItem('bankAmt', newAmount);
+        
+    }
+    
     
 });// End DOM content loaded
