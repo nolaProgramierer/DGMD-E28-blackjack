@@ -3,21 +3,20 @@
    <head>
        <meta lang="en">
        <title>Play Blackjack</title>
-       <link rel="stylesheet" href="/styles.css">
+       <link rel="stylesheet" href="styles.css">
        <script src="/script.js"></script>
    </head>
    <body>
        <div id="main-container">
            
-            <div id="player-bank">Player bank: $<span id="bank-acct">100</span></div>
+            <div id="player-bank">Player bank: $<span id="bank-acct">100</span>
+                <div><button id = "reset-btn" type="button">Reset bank</button></div>
+            </div>
             <div id="title"><h1>Play Blackjack</h1></div>
             <div id="bet">
                 <label for="wager">Place your wager</label>
                 <input id="wager" type="number" name="wager" placeholder=" $5" step="5" min="0" max="100" required>
             </div>
-            
-            
-           
            <div id="dealer-info">Dealer Hand</div>
            <div class="cards" id="dealer-cards"></div>
            <div id="player-info">Player Hand</div>
@@ -34,10 +33,6 @@
             <div id="player-wins"><h1>Player wins!</h1></div>
            </div>
            
-
-
        </div>
-
    </body>
-
 </html>

@@ -2,30 +2,33 @@ document.addEventListener("DOMContentLoaded", function() {
     // Hide play buttons
     document.querySelector('#hit').style.visibility = 'hidden';
     document.querySelector('#stand').style.visibility = 'hidden';
-    
-    var playerBet = 0;
-    var playerBank = 0;
 
-
+    document.querySelector('#reset-btn').addEventListener('click', function() {
+        localStorage.clear();
+        localStorage.setItem('bankAmt', 100);
+        window.location.reload();
+    })
+   
+    // Get current amount of player account from localStorage
     var bankAmt = localStorage.getItem('bankAmt');
     if (bankAmt) {
         document.querySelector('#bank-acct').innerHTML = bankAmt;
+    } else {
+        document.querySelector('#bank-acct').innerHTML = 100;
     }
-
 
     document.querySelector('#deal').addEventListener('click', function() {
         // Hide 'deal' button once play begins
         document.querySelector('#deal').style.display = "none";
-
+        // Prevent changes in wager after cards are dealt
         freezeWager();
-
+        // Make a deck of cards
         var deck1 = makeDeck();
         var shuffledDeck = shuffleDeck(deck1);
         var dealtCards = dealCards(shuffledDeck);
         //Show play buttons
         document.querySelector('#hit').style.visibility = 'visible';
         document.querySelector('#stand').style.visibility = 'visible';
-
         console.log("Let's play!");
     });
 
@@ -51,8 +54,6 @@ document.addEventListener("DOMContentLoaded", function() {
     const playerHand = [];
     const dealerHand = [];
     var playingDeck = [];
-    var amtForward = 0;
-    var playerCardCount = 0;
 
     /* For every suit, twelve objects containing suit, card face value and card rank*/
     function makeDeck() {
@@ -121,6 +122,7 @@ document.addEventListener("DOMContentLoaded", function() {
         if (isNatural(arr) && !isNatural(playerHand)) {
             document.querySelector('#dealer-wins').style.display = "block";
             endGame();
+            dealerWins();
             console.log('Dealer wins');
         }
     }
@@ -136,6 +138,7 @@ document.addEventListener("DOMContentLoaded", function() {
         if (isNatural(arr) && !isNatural(dealerHand)) {
             document.querySelector('#player-wins').style.display = "block";
             endGame();
+            dealerWins();
             console.log('Player wins');
         }
     }
@@ -163,8 +166,24 @@ document.addEventListener("DOMContentLoaded", function() {
         return val;
     }
 
-    // Player plays
-    function hit(deck) {
+    // Display card on each successive call
+    function showPlayerCard(card) {
+        let cardDiv = document.createElement('div');
+        showCardSuit(card.suit, cardDiv);
+        cardDiv.innerHTML += card.faceVal;
+        document.querySelector('#player-cards').appendChild(cardDiv);
+    }
+
+    // Display card on each successive call
+    function showDealerCard(card) {
+        let cardDiv = document.createElement('div');
+        showCardSuit(card.suit, cardDiv);
+        cardDiv.innerHTML += card.faceVal;
+        document.querySelector('#dealer-cards').appendChild(cardDiv);
+    }
+
+     // Player plays
+     function hit(deck) {
         let sum = 0;
         var nextCard = deck.pop();
         // Display card in browser
@@ -193,24 +212,6 @@ document.addEventListener("DOMContentLoaded", function() {
         return sum;
     }
 
-    // Display card on each successive call
-    function showPlayerCard(card) {
-        let cardDiv = document.createElement('div');
-        showCardSuit(card.suit, cardDiv);
-        cardDiv.innerHTML += card.faceVal;
-        document.querySelector('#player-cards').appendChild(cardDiv);
-    }
-
-    // Display card on each successive call
-    function showDealerCard(card) {
-        let cardDiv = document.createElement('div');
-        showCardSuit(card.suit, cardDiv);
-        cardDiv.innerHTML += card.faceVal;
-        document.querySelector('#dealer-cards').appendChild(cardDiv);
-    }
-
-
-   
     // Dealer plays
     function stand(deck) {
         var playerHandSum = playerHand.reduce(function(previousVal, currentVal) {
@@ -236,12 +237,8 @@ document.addEventListener("DOMContentLoaded", function() {
                 sum = dealerHand.reduce(function(previousVal, currentVal) {
                     return parseInt(previousVal) + parseInt(currentVal.val);
                 }, 0);
-                console.log("Dealer dealing until 17: " + sum);
-                console.log("Player hand sum:" + playerHandSum);
-                console.log("Dealer hand sum:" + sum);
-                console.log("Player hand sum:" + playerHandSum);
-                 // If hand is over 21, dealer busts.  Player wins.
 
+                // If hand is over 21, dealer busts.  Player wins.
                  if (isAce(nextCard) && sum + 11 > 21) {
                      sum -= 10;
                      console.log("Inside is Ace");
@@ -250,6 +247,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 if (sum > 21) {
                     document.querySelector('#player-wins').style.display = "block";
                     endGame();
+                    playerWins();
                     console.log("Dealer busted" + sum);
                 }
             } // end while loop
@@ -257,12 +255,11 @@ document.addEventListener("DOMContentLoaded", function() {
                 return parseInt(previousVal) + parseInt(currentVal.val);
             }, 0);
 
-            console.log("Dealer hand sum:" + sum);
-            console.log("Player hand sum:" + playerHandSum);
 
             if (isNatural(dealerHand) && !isNatural(playerHand)) {
                 document.querySelector('#dealer-wins').style.display = "block";
                 endGame();
+                dealerWins();
                 console.log("Dealer wins");
                 console.log("Dealer" + dealerInitialSum);
                 console.log("Player:" + playerHandSum);
@@ -270,27 +267,24 @@ document.addEventListener("DOMContentLoaded", function() {
             else if (isNatural(playerHand) && !isNatural(dealerHand)) {
                 document.querySelector('#player-wins').style.display = "block";
                 endGame();
+                playerWins();
                 console.log("Player wins");
                 console.log("Dealer" + dealerInitialSum);
                 console.log("Player:" + playerHandSum);
-
-                playerWins()
             }
             else if (sum < 22 && (sum < playerHandSum)) {
                 document.querySelector('#player-wins').style.display = "block";
                 endGame();
+                playerWins();
                 console.log("Player wins" + sum);
-
-                playerWins()
             }
             else if (sum < 22 && sum > playerHandSum) {
                 document.querySelector('#dealer-wins').style.display = "block";
                 endGame();
+                dealerWins();
                 console.log("Dealer wins");
                 console.log("Dealer" + dealerInitialSum);
                 console.log("Player:" + playerHandSum);
-
-                dealerWins()
             }
             else if (dealerInitialSum == playerHandSum) {
                 document.querySelector('#tie').style.display = "block";
@@ -302,9 +296,8 @@ document.addEventListener("DOMContentLoaded", function() {
             else if (sum < 22 && (sum < playerHandSum && playerHandSum < 21)) {
                 document.querySelector('#player-wins').style.display = "block";
                 endGame();
+                playerWins();
                 console.log("Player wins" + sum);
-
-                playerWins()
             }
         } // end if < 17
         // Dealer stands with cards dealt
@@ -327,6 +320,7 @@ document.addEventListener("DOMContentLoaded", function() {
             if (dealerInitialSum > playerHandSum) {
                 document.querySelector('#dealer-wins').style.display = "block";
                 endGame();
+                dealerWins();
                 console.log("Dealer wins");
                 console.log("Dealer" + dealerInitialSum);
                 console.log("Player:" + playerHandSum);
@@ -336,6 +330,7 @@ document.addEventListener("DOMContentLoaded", function() {
             else if (playerHandSum < 22 && playerHandSum > dealerInitialSum) {
                 document.querySelector('#player-wins').style.display = "block";
                 endGame();
+                playerWins();
                 console.log("Player wins");
                 console.log("Dealer" + dealerInitialSum);
                 console.log("Player:" + playerHandSum);
@@ -388,15 +383,6 @@ document.addEventListener("DOMContentLoaded", function() {
         return card.faceVal === "Ace";
     }
 
-    // Determine winner on initial deal
-    function isDealerWinOnFirstDeal(dealerCount, playerCount) {
-        if (dealerCount > 16 && (playerCount < dealerCount)) {
-            document.querySelector('#dealer-wins').style.display = "block";
-            endGame();
-            console.log("Dealer wins with: " + dealerCount);
-        }
-    }
-
     function endGame() {
         // Gray out game table
         document.querySelectorAll('.cards').forEach(function(card) {
@@ -433,25 +419,18 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     }
 
-
     function playerWins() {
         let bet = parseInt(document.querySelector('#wager').value);
         let bankAmount = document.querySelector('#bank-acct').innerHTML;
-        let newAmount = parseInt(bankAmount) - bet;
+        let newAmount = parseInt(bankAmount) + bet;
         console.log(bet + parseInt(bankAmount));
-        document.querySelector('#bank-acct').innerHTML = newAmount;
         localStorage.setItem('bankAmt', newAmount);
-        
     }
 
     function dealerWins() {
         let bet = parseInt(document.querySelector('#wager').value);
         let bankAmount = document.querySelector('#bank-acct').innerHTML;
         let newAmount = parseInt(bankAmount) - bet;
-        document.querySelector('#bank-acct').innerHTML = newAmount;
         localStorage.setItem('bankAmt', newAmount);
-        
     }
-    
-    
 });// End DOM content loaded
