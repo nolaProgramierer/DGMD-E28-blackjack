@@ -18,7 +18,8 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     document.querySelector('#deal').addEventListener('click', function() {
-        // Hide 'deal' button once play begins
+        if (document.querySelector('#wager').value != '') {
+             // Hide 'deal' button once play begins
         document.querySelector('#deal').style.display = "none";
         // Prevent changes in wager after cards are dealt
         freezeWager();
@@ -30,6 +31,8 @@ document.addEventListener("DOMContentLoaded", function() {
         document.querySelector('#hit').style.visibility = 'visible';
         document.querySelector('#stand').style.visibility = 'visible';
         console.log("Let's play!");
+        }
+       
     });
 
     document.querySelector('#hit').addEventListener('click', function() {
